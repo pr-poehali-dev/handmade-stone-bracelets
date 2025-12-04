@@ -145,10 +145,11 @@ const Index = () => {
           <img 
             src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
             alt="BRIOL'Ka Logo" 
-            className="h-12 sm:h-14 w-auto object-contain cursor-pointer animate-fade-in mix-blend-darken dark:mix-blend-lighten"
+            className="h-12 sm:h-14 w-auto object-contain cursor-pointer animate-fade-in"
             onClick={() => setActiveSection('home')}
             style={{ 
-              filter: 'drop-shadow(0 0 0px transparent)',
+              mixBlendMode: 'multiply',
+              filter: 'brightness(1.2) contrast(1.1)',
               backgroundColor: 'transparent'
             }}
           />

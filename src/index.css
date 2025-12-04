@@ -100,4 +100,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  img[alt*="Logo"] {
+    image-rendering: crisp-edges;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }

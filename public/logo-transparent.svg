@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" fill="none">
+  <path d="M40 180 L80 120 L120 140 L160 100 L200 120 L240 80 L280 100 L320 60" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="200" cy="40" r="5" fill="currentColor"/>
+  <circle cx="240" cy="30" r="5" fill="currentColor"/>
+  <circle cx="280" cy="50" r="5" fill="currentColor"/>
+  <circle cx="80" cy="80" r="5" fill="currentColor"/>
+  
+  <text x="200" y="220" font-family="serif" font-size="100" font-weight="bold" fill="currentColor" text-anchor="start">BRIOL'KA</text>
+</svg>

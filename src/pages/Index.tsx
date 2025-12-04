@@ -37,6 +37,7 @@ const Index = () => {
   const [newReview, setNewReview] = useState({ author: '', rating: 5, text: '' });
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const bracelets: Bracelet[] = [
     {
@@ -140,9 +141,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="font-serif text-3xl font-bold text-primary">璞石</h1>
-          <div className="flex items-center gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-primary">BRIOL'Ka</h1>
+          <div className="hidden md:flex items-center gap-8">
             {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
               <button
                 key={section}
@@ -245,23 +246,145 @@ const Index = () => {
               </SheetContent>
             </Sheet>
           </div>
+          <div className="flex md:hidden items-center gap-2">
+            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="relative">
+                  <Icon name="ShoppingCart" size={20} />
+                  {getTotalItems() > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-accent text-primary">
+                      {getTotalItems()}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-lg">
+                <SheetHeader>
+                  <SheetTitle className="font-serif text-2xl">Корзина</SheetTitle>
+                </SheetHeader>
+                <div className="mt-8 space-y-4">
+                  {cart.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Icon name="ShoppingCart" size={48} className="mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Корзина пуста</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+                        {cart.map((item) => (
+                          <Card key={item.bracelet.id}>
+                            <CardContent className="p-4">
+                              <div className="flex gap-4">
+                                <img 
+                                  src={item.bracelet.image} 
+                                  alt={item.bracelet.name}
+                                  className="w-20 h-20 object-cover rounded-md"
+                                />
+                                <div className="flex-1">
+                                  <h4 className="font-serif font-bold mb-1">{item.bracelet.name}</h4>
+                                  <p className="text-sm text-muted-foreground mb-2">{item.bracelet.stone}</p>
+                                  <p className="font-semibold text-accent">{item.bracelet.price.toLocaleString()} ₽</p>
+                                </div>
+                                <div className="flex flex-col items-end justify-between">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => removeFromCart(item.bracelet.id)}
+                                  >
+                                    <Icon name="X" size={16} />
+                                  </Button>
+                                  <div className="flex items-center gap-2">
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => updateQuantity(item.bracelet.id, item.quantity - 1)}
+                                    >
+                                      <Icon name="Minus" size={14} />
+                                    </Button>
+                                    <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => updateQuantity(item.bracelet.id, item.quantity + 1)}
+                                    >
+                                      <Icon name="Plus" size={14} />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                      <div className="border-t border-border pt-4 space-y-4">
+                        <div className="flex justify-between items-center text-lg">
+                          <span className="font-semibold">Итого:</span>
+                          <span className="font-serif text-2xl font-bold text-accent">{getTotalPrice().toLocaleString()} ₽</span>
+                        </div>
+                        <Button className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold py-6 text-lg">
+                          Оформить заказ
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Icon name="Menu" size={20} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px]">
+                <SheetHeader>
+                  <SheetTitle className="font-serif text-2xl">BRIOL'Ka</SheetTitle>
+                </SheetHeader>
+                <div className="mt-8 flex flex-col gap-4">
+                  {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
+                    <button
+                      key={section}
+                      onClick={() => {
+                        setActiveSection(section);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`text-left font-medium py-3 px-4 rounded-md transition-colors ${
+                        activeSection === section 
+                          ? 'bg-accent text-primary' 
+                          : 'text-muted-foreground hover:bg-secondary'
+                      }`}
+                    >
+                      {section === 'home' && 'Главная'}
+                      {section === 'catalog' && 'Каталог'}
+                      {section === 'about' && 'О мастере'}
+                      {section === 'gallery' && 'Галерея'}
+                      {section === 'contacts' && 'Контакты'}
+                    </button>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </nav>
 
       <main className="pt-20">
         {activeSection === 'home' && (
           <div className="animate-fade-in">
-            <section className="relative h-[90vh] flex items-center justify-center bg-gradient-to-b from-secondary to-background">
-              <div className="text-center max-w-4xl px-6">
-                <h2 className="font-serif text-6xl md:text-7xl font-bold text-primary mb-6 animate-scale-in">
+            <section className="relative min-h-[70vh] sm:h-[90vh] flex items-center justify-center bg-gradient-to-b from-secondary to-background">
+              <div className="text-center max-w-4xl px-4 sm:px-6 py-12">
+                <h2 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold text-primary mb-4 sm:mb-6 animate-scale-in">
                   Браслеты ручной работы
                 </h2>
-                <p className="text-xl text-muted-foreground mb-8 font-light">
+                <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 font-light">
                   Эксклюзивные украшения из натуральных камней с золотыми акцентами
                 </p>
                 <Button 
                   size="lg" 
-                  className="bg-accent hover:bg-accent/90 text-primary font-semibold px-8 py-6 text-lg"
+                  className="bg-accent hover:bg-accent/90 text-primary font-semibold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg"
                   onClick={() => setActiveSection('catalog')}
                 >
                   Смотреть коллекцию
@@ -269,8 +392,8 @@ const Index = () => {
               </div>
             </section>
 
-            <section className="py-20 px-6 max-w-7xl mx-auto">
-              <div className="grid md:grid-cols-3 gap-8">
+            <section className="py-12 sm:py-20 px-4 sm:px-6 max-w-7xl mx-auto">
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                 <Card className="text-center p-8 hover:shadow-lg transition-shadow">
                   <CardContent className="pt-6">
                     <Icon name="Gem" size={48} className="mx-auto mb-4 text-accent" />
@@ -298,9 +421,9 @@ const Index = () => {
         )}
 
         {activeSection === 'catalog' && (
-          <div className="py-20 px-6 max-w-7xl mx-auto animate-fade-in">
-            <h2 className="font-serif text-5xl font-bold text-center mb-16">Наша коллекция</h2>
-            <div className="grid md:grid-cols-3 gap-8">
+          <div className="py-12 sm:py-20 px-4 sm:px-6 max-w-7xl mx-auto animate-fade-in">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16">Наша коллекция</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               {bracelets.map((bracelet) => (
                 <Card key={bracelet.id} className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
                   <div className="aspect-square overflow-hidden bg-secondary">
@@ -349,8 +472,8 @@ const Index = () => {
         )}
 
         {activeSection === 'about' && (
-          <div className="py-20 px-6 max-w-4xl mx-auto animate-fade-in">
-            <h2 className="font-serif text-5xl font-bold text-center mb-12">О мастере</h2>
+          <div className="py-12 sm:py-20 px-4 sm:px-6 max-w-4xl mx-auto animate-fade-in">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">О мастере</h2>
             <Card className="p-10">
               <CardContent>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-6">
@@ -371,9 +494,9 @@ const Index = () => {
         )}
 
         {activeSection === 'gallery' && (
-          <div className="py-20 px-6 max-w-7xl mx-auto animate-fade-in">
-            <h2 className="font-serif text-5xl font-bold text-center mb-16">Галерея работ</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+          <div className="py-12 sm:py-20 px-4 sm:px-6 max-w-7xl mx-auto animate-fade-in">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-16">Галерея работ</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {bracelets.map((bracelet) => (
                 <div key={bracelet.id} className="aspect-square overflow-hidden rounded-lg group cursor-pointer">
                   <img 
@@ -388,8 +511,8 @@ const Index = () => {
         )}
 
         {activeSection === 'contacts' && (
-          <div className="py-20 px-6 max-w-2xl mx-auto animate-fade-in">
-            <h2 className="font-serif text-5xl font-bold text-center mb-12">Контакты</h2>
+          <div className="py-12 sm:py-20 px-4 sm:px-6 max-w-2xl mx-auto animate-fade-in">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">Контакты</h2>
             <Card className="p-10">
               <CardContent>
                 <div className="space-y-6 mb-8">
@@ -500,9 +623,9 @@ const Index = () => {
         </div>
       )}
 
-      <footer className="bg-primary text-primary-foreground py-12 mt-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl font-bold mb-4">璞石</h2>
+      <footer className="bg-primary text-primary-foreground py-8 sm:py-12 mt-12 sm:mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold mb-4">BRIOL'Ka</h2>
           <p className="text-primary-foreground/80 mb-6">Браслеты ручной работы из натуральных камней</p>
           <div className="flex justify-center gap-6">
             <Icon name="Instagram" size={24} className="cursor-pointer hover:text-accent transition-colors" />

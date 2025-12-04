@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
 
 interface Review {
@@ -25,10 +26,17 @@ interface Bracelet {
   averageRating: number;
 }
 
+interface CartItem {
+  bracelet: Bracelet;
+  quantity: number;
+}
+
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [selectedBracelet, setSelectedBracelet] = useState<Bracelet | null>(null);
   const [newReview, setNewReview] = useState({ author: '', rating: 5, text: '' });
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const bracelets: Bracelet[] = [
     {
@@ -77,6 +85,47 @@ const Index = () => {
     }
   };
 
+  const addToCart = (bracelet: Bracelet) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.bracelet.id === bracelet.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.bracelet.id === bracelet.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { bracelet, quantity: 1 }];
+    });
+    setIsCartOpen(true);
+  };
+
+  const removeFromCart = (braceletId: number) => {
+    setCart(prevCart => prevCart.filter(item => item.bracelet.id !== braceletId));
+  };
+
+  const updateQuantity = (braceletId: number, quantity: number) => {
+    if (quantity === 0) {
+      removeFromCart(braceletId);
+      return;
+    }
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.bracelet.id === braceletId
+          ? { ...item, quantity }
+          : item
+      )
+    );
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.bracelet.price * item.quantity, 0);
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Icon 
@@ -93,7 +142,7 @@ const Index = () => {
       <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="font-serif text-3xl font-bold text-primary">璞石</h1>
-          <div className="flex gap-8">
+          <div className="flex items-center gap-8">
             {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
               <button
                 key={section}
@@ -109,6 +158,92 @@ const Index = () => {
                 {section === 'contacts' && 'Контакты'}
               </button>
             ))}
+            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="relative">
+                  <Icon name="ShoppingCart" size={20} />
+                  {getTotalItems() > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-accent text-primary">
+                      {getTotalItems()}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-lg">
+                <SheetHeader>
+                  <SheetTitle className="font-serif text-2xl">Корзина</SheetTitle>
+                </SheetHeader>
+                <div className="mt-8 space-y-4">
+                  {cart.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Icon name="ShoppingCart" size={48} className="mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Корзина пуста</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+                        {cart.map((item) => (
+                          <Card key={item.bracelet.id}>
+                            <CardContent className="p-4">
+                              <div className="flex gap-4">
+                                <img 
+                                  src={item.bracelet.image} 
+                                  alt={item.bracelet.name}
+                                  className="w-20 h-20 object-cover rounded-md"
+                                />
+                                <div className="flex-1">
+                                  <h4 className="font-serif font-bold mb-1">{item.bracelet.name}</h4>
+                                  <p className="text-sm text-muted-foreground mb-2">{item.bracelet.stone}</p>
+                                  <p className="font-semibold text-accent">{item.bracelet.price.toLocaleString()} ₽</p>
+                                </div>
+                                <div className="flex flex-col items-end justify-between">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => removeFromCart(item.bracelet.id)}
+                                  >
+                                    <Icon name="X" size={16} />
+                                  </Button>
+                                  <div className="flex items-center gap-2">
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => updateQuantity(item.bracelet.id, item.quantity - 1)}
+                                    >
+                                      <Icon name="Minus" size={14} />
+                                    </Button>
+                                    <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => updateQuantity(item.bracelet.id, item.quantity + 1)}
+                                    >
+                                      <Icon name="Plus" size={14} />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                      <div className="border-t border-border pt-4 space-y-4">
+                        <div className="flex justify-between items-center text-lg">
+                          <span className="font-semibold">Итого:</span>
+                          <span className="font-serif text-2xl font-bold text-accent">{getTotalPrice().toLocaleString()} ₽</span>
+                        </div>
+                        <Button className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold py-6 text-lg">
+                          Оформить заказ
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </nav>
@@ -187,15 +322,24 @@ const Index = () => {
                       </div>
                     </div>
                     <p className="text-muted-foreground mb-4 text-sm">{bracelet.description}</p>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center gap-2">
                       <span className="font-serif text-2xl font-bold text-accent">{bracelet.price.toLocaleString()} ₽</span>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setSelectedBracelet(bracelet)}
-                      >
-                        Отзывы ({bracelet.reviews.length})
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setSelectedBracelet(bracelet)}
+                        >
+                          <Icon name="MessageCircle" size={16} />
+                        </Button>
+                        <Button 
+                          size="sm"
+                          className="bg-accent hover:bg-accent/90 text-primary"
+                          onClick={() => addToCart(bracelet)}
+                        >
+                          <Icon name="ShoppingCart" size={16} />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

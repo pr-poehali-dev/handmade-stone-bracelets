@@ -145,13 +145,8 @@ const Index = () => {
           <img 
             src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
             alt="BRIOL'Ka Logo" 
-            className="h-12 sm:h-14 w-auto object-contain cursor-pointer animate-fade-in"
+            className="h-12 sm:h-14 w-auto object-contain cursor-pointer animate-fade-in brightness-0 invert"
             onClick={() => setActiveSection('home')}
-            style={{ 
-              mixBlendMode: 'multiply',
-              filter: 'brightness(1.2) contrast(1.1)',
-              backgroundColor: 'transparent'
-            }}
           />
           <div className="hidden md:flex items-center gap-8">
             {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
@@ -355,11 +350,7 @@ const Index = () => {
                     <img 
                       src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
                       alt="BRIOL'Ka Logo" 
-                      className="h-12 w-auto object-contain mix-blend-darken dark:mix-blend-lighten"
-                      style={{ 
-                        filter: 'drop-shadow(0 0 0px transparent)',
-                        backgroundColor: 'transparent'
-                      }}
+                      className="h-12 w-auto object-contain brightness-0 invert"
                     />
                   </SheetTitle>
                 </SheetHeader>
@@ -394,7 +385,7 @@ const Index = () => {
       <main className="pt-20">
         {activeSection === 'home' && (
           <div className="animate-fade-in">
-            <section className="relative min-h-[70vh] sm:h-[90vh] flex items-center justify-center bg-gradient-to-b from-secondary to-background">
+            <section className="relative min-h-[70vh] sm:h-[90vh] flex items-center justify-center bg-gradient-to-b from-secondary/50 to-background">
               <div className="text-center max-w-4xl px-4 sm:px-6 py-12">
                 <h2 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold text-primary mb-4 sm:mb-6 animate-scale-in">
                   Браслеты ручной работы
@@ -648,11 +639,7 @@ const Index = () => {
           <img 
             src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
             alt="BRIOL'Ka Logo" 
-            className="h-12 sm:h-16 w-auto object-contain mx-auto mb-4 brightness-0 invert"
-            style={{ 
-              filter: 'brightness(0) invert(1) drop-shadow(0 0 0px transparent)',
-              backgroundColor: 'transparent'
-            }}
+            className="h-12 sm:h-16 w-auto object-contain mx-auto mb-4"
           />
           <p className="text-primary-foreground/80 mb-6">Браслеты ручной работы из натуральных камней</p>
           <div className="flex justify-center gap-6">

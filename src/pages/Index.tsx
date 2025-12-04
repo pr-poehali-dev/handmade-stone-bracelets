@@ -143,7 +143,7 @@ const Index = () => {
       <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
           <img 
-            src="https://cdn.poehali.dev/files/3d72b536-61c2-4840-aa8d-78c7f67bdd4f.jpeg" 
+            src="https://cdn.poehali.dev/files/7dda6c5c-b12a-4fb6-ae90-5d12c73e7346.jpeg" 
             alt="BRIOL'Ka Logo" 
             className="h-12 sm:h-14 w-auto object-contain cursor-pointer animate-fade-in"
             onClick={() => setActiveSection('home')}

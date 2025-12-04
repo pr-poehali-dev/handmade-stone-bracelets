@@ -141,8 +141,13 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-primary">BRIOL'Ka</h1>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+          <img 
+            src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
+            alt="BRIOL'Ka Logo" 
+            className="h-12 sm:h-14 w-auto object-contain cursor-pointer"
+            onClick={() => setActiveSection('home')}
+          />
           <div className="hidden md:flex items-center gap-8">
             {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
               <button
@@ -341,7 +346,13 @@ const Index = () => {
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px]">
                 <SheetHeader>
-                  <SheetTitle className="font-serif text-2xl">BRIOL'Ka</SheetTitle>
+                  <SheetTitle>
+                    <img 
+                      src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
+                      alt="BRIOL'Ka Logo" 
+                      className="h-12 w-auto object-contain"
+                    />
+                  </SheetTitle>
                 </SheetHeader>
                 <div className="mt-8 flex flex-col gap-4">
                   {['home', 'catalog', 'about', 'gallery', 'contacts'].map((section) => (
@@ -625,7 +636,11 @@ const Index = () => {
 
       <footer className="bg-primary text-primary-foreground py-8 sm:py-12 mt-12 sm:mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold mb-4">BRIOL'Ka</h2>
+          <img 
+            src="https://cdn.poehali.dev/files/ee29e6e1-d342-4bcb-82bd-cd7a271f5d5d.jpeg" 
+            alt="BRIOL'Ka Logo" 
+            className="h-12 sm:h-16 w-auto object-contain mx-auto mb-4 brightness-0 invert"
+          />
           <p className="text-primary-foreground/80 mb-6">Браслеты ручной работы из натуральных камней</p>
           <div className="flex justify-center gap-6">
             <Icon name="Instagram" size={24} className="cursor-pointer hover:text-accent transition-colors" />
